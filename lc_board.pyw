@@ -17,8 +17,10 @@ class lc_board(tkinter.Frame):
       
       self.imgList = []
       self.board = None
-      self.generateBoard()
+      self.playerOneCollision = False
+      self.playerTwoCollision = False
       
+      self.generateBoard()
       self.drawBoard()
    
    def drawBoard(self):
@@ -38,20 +40,36 @@ class lc_board(tkinter.Frame):
             self.imgList.append(self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color))
       #self.canvas.update_idletasks()
    
-   def setBoard(self, boardStr):
-      for x in range(boardDimension):
-         for y in range(boardDimension):
-            charIndex = x + (y * boardDimension)
-            self.board[x][y] = Int(boardStr[charIndex])
-   
    def generateBoard(self):
-      """ set the initial board state """
-      self.board = [[0 for y in range(boardDimension)] for x in range(boardDimension)]
+      """Set the initial board state """
+      self.board = [[EMPTY for y in range(boardDimension)] for x in range(boardDimension)]
       for i in range(boardDimension):
          self.board[i][0] = WALL
          self.board[i][boardDimension - 1] = WALL
          self.board[0][i] = WALL
          self.board[boardDimension - 1][i] = WALL
+   
+   def mark(self, x, y, playerNum):
+      """ Mark the board with a player's tail, noting if a collision occured """
+      if self.board[x][y] != EMPTY:
+         if playerNum == PLAYER_ONE:
+            self.playerOneCollision = True
+            if self.board[x][y] == PLAYER_TWO:
+               self.playerTwoCollision = True
+         if playerNum == PLAYER_TWO:
+            self.playerTwoCollision = True
+            if self.board[x][y] == PLAYER_ONE:
+               self.playerOneCollision = True
+      self.board[x][y] = playerNum
+   
+   def playerOneCollision(self):
+      return playerOneCollision
+   
+   def playerTwoCollision(self):
+      return playerTwoCollision
+   
+   def collisionOccured(self):
+      return playerOneCollision or playerTwoCollision
    
 if __name__ == "__main__":
    root = tkinter.Tk()
@@ -61,6 +79,7 @@ if __name__ == "__main__":
    
    app.board[1][boardDimension // 2] = PLAYER_ONE
    app.board[boardDimension - 2][boardDimension // 2] = PLAYER_TWO
+   app.mark(3, 3, 1)
    app.drawBoard()
    
    # needs to be last, doesn't return
