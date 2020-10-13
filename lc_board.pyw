@@ -1,4 +1,6 @@
 import tkinter
+import threading
+import time
 from lc_constants import *
 
 #declare constants
@@ -22,11 +24,16 @@ class Board(tkinter.Frame):
       self.board = None
       self.playerOneCollision = False
       self.playerTwoCollision = False
-      
       self.generateBoard()
-      self.drawBoard()
-      # needs to be last, doesn't return
-      root.mainloop()
+      self.running = False
+      self.loopThread = threading.Thread(target = self.drawLoop, daemon = True)
+      self.loopThread.start()
+   
+   def drawLoop(self):
+      while True:
+         if self.running:
+            self.drawBoard()
+            time.sleep(.1)
    
    def drawBoard(self):
       """Draws the board as a table of squares """
@@ -86,4 +93,6 @@ if __name__ == "__main__":
    app.board[1][boardDimension // 2] = PLAYER_ONE
    app.board[boardDimension - 2][boardDimension // 2] = PLAYER_TWO
    app.mark(3, 3, 1)
+   app.running = True
+   app.mainloop()
    

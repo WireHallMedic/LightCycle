@@ -7,6 +7,8 @@ class LightCycle:
    def __init__(self):
       self.frame = Board()
       self.timer = None
+      
+      self.frame.mainloop()
 
    def destroy(self):
       """Terminate the timer on the way out, or it keeps running."""
