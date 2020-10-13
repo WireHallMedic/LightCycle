@@ -5,10 +5,6 @@ import lc_constants
 windowWidth = 800
 windowHeight = 500
 windowSize = "{}x{}".format(windowWidth, windowHeight)
-boardDimension = 31
-EMPTY = 0
-PLAYER_ONE = 1
-PLAYER_TWO = 2
 tileSize = 10
 
 class lc_board(tkinter.Frame):
