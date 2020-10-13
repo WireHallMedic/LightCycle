@@ -1,5 +1,5 @@
 import tkinter
-import lc_constants
+from lc_constants import *
 
 #declare constants
 windowWidth = 800
@@ -27,13 +27,15 @@ class lc_board(tkinter.Frame):
       self.imgList = []
       for x in range(len(self.board)):
          for y in range(len(self.board[0])):
-            color = lc_constants.EMPTY_COLOR
+            color = EMPTY_COLOR
             if self.board[x][y] == PLAYER_ONE:
-               color = lc_constants.HOST_COLOR
+               color = HOST_COLOR
             elif self.board[x][y] == PLAYER_TWO:
-               color = lc_constants.CLIENT_COLOR
+               color = CLIENT_COLOR
+            elif self.board[x][y] == WALL:
+               color = WALL_COLOR
             self.imgList.append(self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color))
-      self.canvas.update_idletasks()
+      #self.canvas.update_idletasks()
    
    def setBoard(self, boardStr):
       for x in range(boardDimension):
@@ -47,8 +49,13 @@ if __name__ == "__main__":
    root.geometry(windowSize)
    app = lc_board(master = root)
    
-   app.board[0][boardDimension // 2] = PLAYER_ONE
-   app.board[boardDimension - 1][boardDimension // 2] = PLAYER_TWO
+   app.board[1][boardDimension // 2] = PLAYER_ONE
+   app.board[boardDimension - 2][boardDimension // 2] = PLAYER_TWO
+   for i in range(boardDimension):
+      app.board[i][0] = WALL
+      app.board[i][boardDimension - 1] = WALL
+      app.board[0][i] = WALL
+      app.board[boardDimension - 1][i] = WALL
    app.drawBoard()
    
    # needs to be last, doesn't return
