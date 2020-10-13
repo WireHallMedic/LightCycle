@@ -25,8 +25,10 @@ class lc_board(tkinter.Frame):
       self.drawBoard()
    
    def drawBoard(self):
+      """Draws the board as a table of squares """
       for item in self.imgList:
          self.canvas.delete(item)
+      self.imgList = []
       for x in range(len(self.board)):
          for y in range(len(self.board[0])):
             color = lc_constants.EMPTY_COLOR
@@ -37,9 +39,21 @@ class lc_board(tkinter.Frame):
             self.imgList.append(self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color))
       self.canvas.update_idletasks()
    
+   def setBoard(self, boardStr):
+      for x in range(boardDimension):
+         for y in range(boardDimension):
+            charIndex = x + (y * boardDimension)
+            self.board[x][y] = Int(boardStr[charIndex])
+   
 if __name__ == "__main__":
    root = tkinter.Tk()
    root.title("LightCycle")
    root.geometry(windowSize)
    app = lc_board(master = root)
+   
+   app.board[0][boardDimension // 2] = PLAYER_ONE
+   app.board[boardDimension - 1][boardDimension // 2] = PLAYER_TWO
+   app.drawBoard()
+   
+   # needs to be last, doesn't return
    root.mainloop()
