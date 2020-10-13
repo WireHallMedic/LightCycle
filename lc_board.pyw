@@ -15,8 +15,9 @@ class lc_board(tkinter.Frame):
       self.canvas = tkinter.Canvas(master, width = windowWidth, height = windowHeight)
       self.canvas.pack()
       
-      self.board = [[0 for y in range(boardDimension)] for x in range(boardDimension)]
       self.imgList = []
+      self.board = None
+      self.generateBoard()
       
       self.drawBoard()
    
@@ -43,6 +44,15 @@ class lc_board(tkinter.Frame):
             charIndex = x + (y * boardDimension)
             self.board[x][y] = Int(boardStr[charIndex])
    
+   def generateBoard(self):
+      """ set the initial board state """
+      self.board = [[0 for y in range(boardDimension)] for x in range(boardDimension)]
+      for i in range(boardDimension):
+         self.board[i][0] = WALL
+         self.board[i][boardDimension - 1] = WALL
+         self.board[0][i] = WALL
+         self.board[boardDimension - 1][i] = WALL
+   
 if __name__ == "__main__":
    root = tkinter.Tk()
    root.title("LightCycle")
@@ -51,11 +61,6 @@ if __name__ == "__main__":
    
    app.board[1][boardDimension // 2] = PLAYER_ONE
    app.board[boardDimension - 2][boardDimension // 2] = PLAYER_TWO
-   for i in range(boardDimension):
-      app.board[i][0] = WALL
-      app.board[i][boardDimension - 1] = WALL
-      app.board[0][i] = WALL
-      app.board[boardDimension - 1][i] = WALL
    app.drawBoard()
    
    # needs to be last, doesn't return
