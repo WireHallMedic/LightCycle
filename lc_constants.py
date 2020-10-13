@@ -5,3 +5,4 @@ BOARD_HEIGHT = 25
 SECONDS_PER_TICK = .5
 HOST_COLOR = "orange"
 CLIENT_COLOR = "cyan"
+EMPTY_COLOR = "gray"
