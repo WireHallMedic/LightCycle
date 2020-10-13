@@ -7,12 +7,15 @@ windowHeight = 500
 windowSize = "{}x{}".format(windowWidth, windowHeight)
 tileSize = 10
 
-class lc_board(tkinter.Frame):
+class Board(tkinter.Frame):
 
-   def __init__(self, master):
+   def __init__(self):
       """Initialize frame"""
-      super(lc_board, self).__init__(master)
-      self.canvas = tkinter.Canvas(master, width = windowWidth, height = windowHeight)
+      root = tkinter.Tk()
+      root.title("LightCycle")
+      root.geometry(windowSize)
+      super(Board, self).__init__(root)
+      self.canvas = tkinter.Canvas(root, width = windowWidth, height = windowHeight)
       self.canvas.pack()
       
       self.imgList = []
@@ -22,6 +25,8 @@ class lc_board(tkinter.Frame):
       
       self.generateBoard()
       self.drawBoard()
+      # needs to be last, doesn't return
+      root.mainloop()
    
    def drawBoard(self):
       """Draws the board as a table of squares """
@@ -71,16 +76,14 @@ class lc_board(tkinter.Frame):
    def collisionOccured(self):
       return playerOneCollision or playerTwoCollision
    
+   def destroy(self):
+      """Terminate the timer on the way out, or it keeps running."""
+      tkinter.Frame.destroy(self)
+   
 if __name__ == "__main__":
-   root = tkinter.Tk()
-   root.title("LightCycle")
-   root.geometry(windowSize)
-   app = lc_board(master = root)
+   app = Board()
    
    app.board[1][boardDimension // 2] = PLAYER_ONE
    app.board[boardDimension - 2][boardDimension // 2] = PLAYER_TWO
    app.mark(3, 3, 1)
-   app.drawBoard()
    
-   # needs to be last, doesn't return
-   root.mainloop()
