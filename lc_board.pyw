@@ -20,11 +20,12 @@ class Board(tkinter.Frame):
       self.canvas = tkinter.Canvas(root, width = windowWidth, height = windowHeight)
       self.canvas.pack()
       
-      self.imgList = []
+      self.imgArr = None
       self.board = None
       self.playerOneCollision = False
       self.playerTwoCollision = False
       self.generateBoard()
+      self.generateImgArr()
       self.running = False
       self.loopThread = threading.Thread(target = self.drawLoop, daemon = True)
       self.loopThread.start()
@@ -36,10 +37,11 @@ class Board(tkinter.Frame):
             time.sleep(.1)
    
    def drawBoard(self):
-      """Draws the board as a table of squares """
+      """Draws the board as a table of squares 
       for item in self.imgList:
          self.canvas.delete(item)
       self.imgList = []
+      
       for x in range(len(self.board)):
          for y in range(len(self.board[0])):
             color = EMPTY_COLOR
@@ -49,8 +51,8 @@ class Board(tkinter.Frame):
                color = CLIENT_COLOR
             elif self.board[x][y] == WALL:
                color = WALL_COLOR
-            self.imgList.append(self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color))
-      #self.canvas.update_idletasks()
+            self.imgList.append(self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color))"""
+      self.canvas.update_idletasks()
    
    def generateBoard(self):
       """Set the initial board state """
@@ -60,6 +62,23 @@ class Board(tkinter.Frame):
          self.board[i][boardDimension - 1] = WALL
          self.board[0][i] = WALL
          self.board[boardDimension - 1][i] = WALL
+   
+   def generateImgArr(self):
+      """Set the full image array """
+      self.board = [[EMPTY for y in range(boardDimension)] for x in range(boardDimension)]
+      for x in range(boardDimension):
+         for y in range(boardDimension):
+            self.setImgArrCell(x, y)
+   
+   def setImgArrCell(self, x, y):
+      color = EMPTY_COLOR
+      if self.board[x][y] == PLAYER_ONE:
+         color = HOST_COLOR
+      elif self.board[x][y] == PLAYER_TWO:
+         color = CLIENT_COLOR
+      elif self.board[x][y] == WALL:
+         color = WALL_COLOR
+      self.board[x][y] = self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color)
    
    def mark(self, x, y, playerNum):
       """ Mark the board with a player's tail, noting if a collision occured """
