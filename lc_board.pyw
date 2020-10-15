@@ -65,7 +65,7 @@ class Board(tkinter.Frame):
    
    def generateImgArr(self):
       """Set the full image array """
-      self.board = [[EMPTY for y in range(boardDimension)] for x in range(boardDimension)]
+      self.imgArr = [[None for y in range(boardDimension)] for x in range(boardDimension)]
       for x in range(boardDimension):
          for y in range(boardDimension):
             self.setImgArrCell(x, y)
@@ -78,7 +78,10 @@ class Board(tkinter.Frame):
          color = CLIENT_COLOR
       elif self.board[x][y] == WALL:
          color = WALL_COLOR
-      self.board[x][y] = self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color)
+      oldTile = self.imgArr[x][y]
+      self.imgArr[x][y] = self.canvas.create_rectangle(x * tileSize, y * tileSize, (x * tileSize) + tileSize - 1, (y * tileSize) + tileSize - 1, fill = color)
+      if getattr(oldTile, "destroy", None) is not None:
+         oldTile.destroy()
    
    def mark(self, x, y, playerNum):
       """ Mark the board with a player's tail, noting if a collision occured """
@@ -92,6 +95,7 @@ class Board(tkinter.Frame):
             if self.board[x][y] == PLAYER_ONE:
                self.playerOneCollision = True
       self.board[x][y] = playerNum
+      self.setImgArrCell(x, y)
    
    def playerOneCollision(self):
       return playerOneCollision
@@ -108,10 +112,8 @@ class Board(tkinter.Frame):
    
 if __name__ == "__main__":
    app = Board()
-   
-   app.board[1][boardDimension // 2] = PLAYER_ONE
-   app.board[boardDimension - 2][boardDimension // 2] = PLAYER_TWO
-   app.mark(3, 3, 1)
+   app.mark(1, boardDimension // 2, PLAYER_ONE)
+   app.mark(boardDimension - 2, boardDimension // 2, PLAYER_TWO)
    app.running = True
    app.mainloop()
    
